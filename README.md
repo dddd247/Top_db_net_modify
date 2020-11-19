@@ -104,6 +104,15 @@ python main.py --config-file configs/Modify_top_bdnet_test_market1501.yaml --roo
 python main.py --config-file configs/Modify_top_bdnet_test_dukemtmc.yaml --root $path_to_datasets  
 ```
 
+Results
+--------
+
+| Dataset       | mAP  | Rank-1 | mAP (RK)| Rank-1 (RK)  | 
+| ------------- |:----:|:------:|:-------:|:------------:|
+| Market1501    | 86.6 | 94.5   | 93.9    | 95.4         |
+| DukeMTMC-ReID | 74.8 | 87.6   | 88.8    | 91.3         |
+
+
 
 #### useful tips
 If you want to show the testing activation maps, you can use make the `visrankactivthr: True` and `visrankactiv: True` on the config files.
