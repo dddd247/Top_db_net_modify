@@ -9,7 +9,7 @@
 
 ### Get Started
 1. cd the folder where you want to download this repo
-2. Run git clone https://github.com/dddd247/Vehicle-Re-ID.git
+2. Run git clone https://github.com/dddd247/Top_db_net_modify
 3. Install dependencise:
    * python >= 3.6
    * pytorch >= 0.4
@@ -23,38 +23,38 @@
    * os, sys
    * visdom ( help us to visualize the process of training)
 4. Prepare dataset:
-   - VeRi-776
-   - VehicleID
+   - Market1501
+   - Dukemtmc
    
    You need to download them by yourself, and then create a file to store reid datasets
    under this repo via
     ```bash
-    cd Vehicle-Re-ID
+    cd Top_db_net_modify
     mkdir datasets
     ```
     
-    (1) VeRi-776
-    * Download the dataset to `dataset/` from https://github.com/JDAI-CV/VeRidataset
-    * Extract dataset and rename to `VeRi`. The data structure would like:
+    (1) Market1501
+    * Download the dataset to `dataset/` from https://www.kaggle.com/pengcw1/market-1501
+    * Extract dataset and rename to `Market1501`. The data structure would like:
     
     ```bash
     datasets
-        VeRi # this folder contains 18 files.
-            image_query/
-            image_test/
-            image_train/
+        Market1501 # this folder contains 6 files.
+            bounding_box_test/
+            bounding_box_train/
+            gt_bbox/
             ......
     ```  
-    (2) VehicleID
-    * Download the dataset to `dataset/` from https://pkuml.org/resources/pku-vehicleid.html
-    * Extract dataset and rename to `VehicleID`. The data structure would like:
+    (2) DukeMTMC
+    * Download the dataset to `dataset/` from https://drive.google.com/file/d/1jjE85dRCMOgRtvJ5RQV9-Afs-2_5dY3O/view
+    * Extract dataset and rename to `DukeMTMC`. The data structure would like:
     
     ```bash
     datasets
-        VehicleID # this folder contains 4 files.
-            attribute/
-            image/
-            train_test_split/
+        DukeMTMC# this folder contains 7 files.
+            bounding_box_test/
+            bounding_box_train/
+            query/
             ......
     ```  
     
@@ -71,38 +71,39 @@
  ## Train
  You can run these command in `args.py ` for training different datasets of different losses.
  
- 1. VeRi-776, cross entropy loss + triplet loss
+ 1. Market1501, cross entropy loss + triplet loss
  
  You can directly use the command as follows:
  
  ```bash
-python train.py -s veri -t veri --height 128 --width 256 --optim amsgrad --lr 0.0003 --gamma 0.1 --random_erase --color_jitter --color_aug --label_smooth --max_epoch 90 --stepsize 30 55 70 --train_batch_size 48 --test_batch_size 100 -a resnet50_fc2432_bam  --save_dir {the place where you want to save the weights} --gpu_devices 0 --eval_freq 1 --num_instances 8 --workers 8
+python main.py --config-file configs/Modify_top_bdnet_train_market1501.yaml --root $path_to_datasets
 ```
 
-2. VehicleID, cross entropy loss + triplet loss
+2. DukeMTMC, cross entropy loss + triplet loss
 
  You can directly use the command as follows:
  
 ```bash
-python train.py -s vehicleID -t vehicleID --height 128 --width 256 --optim amsgrad --lr 0.0001 --gamma 0.1 --random_erase --color_jitter --color_aug --label_smooth --max_epoch 90 --stepsize 30 55 70 --train_batch_size 48 --test_batch_size 100 -a resnet50_fc2432_bam  --save_dir {the place where you want to save the weights} --gpu_devices 0 --eval_freq 1 --num_instances 8 --workers 8
+python main.py --config-file configs/Modify_top_bdnet_train_dukemtmc.yaml --root $path_to_datasets
 ```
 
 
 ## Test 
 You can test your model's performance directly by using these commands as follows:
 
-1. Test with VeRi-776
+1. Test with Market1501
 
 ```bash
-python train.py -s veri -t veri --height 128 --width 256 --test_batch_size 100 --evaluate -a resnet50_fc2432_bam --load_weights {the place where you already saved model's weights} --save_dir log/Veri_eval-veri-to-veri --gpu_devices 0  
+python main.py --config-file configs/Modify_top_bdnet_test_market1501.yaml --root $path_to_datasets
 ```
 
-2. Test with VehicleID
+2. Test with DukeMTMC
 
 ```bash
-python train.py -s vehicleID -t vehicleID --height 128 --width 256 --test_batch_size 100 --evaluate -a resnet50_fc2432_bam --load_weights {the place where you already saved model's weights} --save_dir log/Veri_eval-vehicleID-to-vehicleID --gpu_devices 0  
+
+python main.py --config-file configs/Modify_top_bdnet_test_dukemtmc.yaml --root $path_to_datasets  
 ```
 
 
 #### useful tips
-If you want to train or test on VehicleID dataset, you need to change the ` eval_metrics.py ` in line 130 in order to match different dataset settings.
+If you want to show the testing activation maps, you can use make the `visrankactivthr: True` and `visrankactiv: True` on the config files.
