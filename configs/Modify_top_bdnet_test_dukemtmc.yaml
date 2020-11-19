@@ -1,0 +1,39 @@
+model:
+  name: 'top_bdnet_neck_botdropfeat_doubot'
+  load_weights: 'log/Modify_Market501_train/model.pth.tar-390'
+
+data:
+  type: 'image'
+  sources: ['dukemtmcreid']
+  targets: ['dukemtmcreid']
+  height: 384
+  width: 128
+  combineall: False
+  transforms: ['random_flip', 'random_crop', 'random_erase']
+  save_dir: 'log/Test_on_Market1501/'
+
+cuhk03:
+  labeled_images: False
+
+sampler:
+  train_sampler: 'RandomIdentitySampler'
+
+test:
+  batch_size: 300
+  dist_metric: 'euclidean'
+  #normalize_feature: False
+  normalize_feature: True
+  evaluate: True
+  eval_freq: 60
+  rerank: True
+  #visactmap: False
+  visactmap: True
+  #visrank: False
+  visrank: True
+  #visrankactiv: False
+  visrankactiv: True
+  visrank_topk: 5
+  #visrankactivthr: False
+  visrankactivthr: True
+  maskthr: 0.35
+
